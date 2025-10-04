@@ -1,0 +1,8 @@
+﻿################################################################################
+# 이 .gitignore 파일은 Microsoft(R) Visual Studio에서 자동으로 만들어졌습니다.
+################################################################################
+
+/opengl_study/.vs/opengl_study
+/opengl_study/opengl_study/x64/Debug
+/opengl_study/vcpkg_installed
+/opengl_study/x64/Debug
