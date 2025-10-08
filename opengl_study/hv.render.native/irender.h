@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render_types.h"
+#include "renderTypes.h"
 
 #ifndef IRENDER_HEADER
 #define IRENDER_HEADER
@@ -25,7 +25,7 @@ namespace hv {
 #pragma endregion
 
 #pragma region Public Functions
-			virtual void dispose() = 0;
+			virtual void cleanUp() = 0;
 
 			virtual void resizeOutput(const hv::v1::outputDesc& out) = 0;
 			virtual void setClearColor(const hv::v1::clearColor& clear) = 0;

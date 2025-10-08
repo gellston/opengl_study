@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;ARM32;x64</Platforms>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(SolutionDir)\\x64\\$(ConfigurationName)\\&quot; &quot;$(SolutionDir)\\ConsoleTest\\bin\\x64\\$(ConfigurationName)\\$(TargetFramework)\\&quot; /c /i /e /h /y" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.11.0.20250507" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hv.Render.Interop\Hv.Render.Interop.vcxproj" />
+  </ItemGroup>
+
+</Project>

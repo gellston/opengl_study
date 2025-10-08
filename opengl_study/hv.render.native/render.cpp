@@ -1,5 +1,5 @@
 ﻿#include "render.h"
-#include "impl_render_runtime.h"
+#include "implRenderRuntime.h"
 
 
 #include <GL/glew.h>
@@ -68,38 +68,43 @@ namespace hv {
 
 			void threadMain() {
                 // [1] GLFW/컨텍스트 생성(Windows/Linux 전제. macOS면 메인스레드 생성 필요)
-                
-
                 {
-
                     // Thread safe 초기화 직렬화.
-                    std::lock_guard<std::mutex> lk(g_createMtx);
+                    std::lock_guard<std::mutex> lock(g_createMtx);
                     if (!glfwInit()) { std::fprintf(stderr, "glfwInit failed\n"); return; }
                     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
                     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, hv::v1::global_glMajor);
                     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, hv::v1::global_glMinor);
                     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-
                     win = glfwCreateWindow(32, 32, "hidden", nullptr, nullptr);
                 }
- 
-                if (!win) { std::fprintf(stderr, "create window failed\n"); glfwTerminate(); return; }
+
+                if (!win) { 
+                    std::fprintf(stderr, "create window failed\n"); 
+                    glfwTerminate(); 
+                    return; 
+                }
 
                 glfwMakeContextCurrent(win);
                 glewExperimental = GL_TRUE;
-                if (glewInit() != GLEW_OK) { std::fprintf(stderr, "glewInit failed\n"); return; }
+                if (glewInit() != GLEW_OK) { 
+                    std::fprintf(stderr, "glewInit failed\n"); 
+                    return; 
+                }
+
+
 
                 // [2] FBO 1회 생성 (첨부물은 리사이즈 시 재할당)
                 glGenFramebuffers(1, &fbo);
                 glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-                // 루프 시작
+                // Render Loop 진입
                 while (this->running)
                 {
                     // [A] 깨울 조건: 더티 발생 또는 종료 요청
                     {
-                        std::unique_lock<std::mutex> lk(mtx);
-                        condV.wait(lk, [&] { return shutdown || sizeDirty || clearDirty || viewDirty || dataDirty; });
+                        std::unique_lock<std::mutex> lock(mtx);
+                        condV.wait(lock, [&] { return shutdown || sizeDirty || clearDirty || viewDirty || dataDirty; });
                         if (shutdown) break;
                     }
 
@@ -133,7 +138,6 @@ namespace hv {
                             glGenRenderbuffers(1, &depthstencil);
                             glBindRenderbuffer(GL_RENDERBUFFER, depthstencil);
                             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthstencil);
-
                             hasAttachments = true;
                         }
 
@@ -208,6 +212,8 @@ namespace hv {
                         viewDirty = false;
                     }
 
+
+
                     // [E] 데이터 갱신(스켈레톤: 고정 지오메트리 → 아무것도 안 함)
                     if (dataDirty) {
                         // TODO: 여기에서 포인트클라우드/라인 등의 VBO 업로드/갱신을 수행
@@ -217,7 +223,7 @@ namespace hv {
                     // [F] *** 실제 렌더링: 고정 "삼각뿔" (Immediate Mode) ***
                     //  - 스켈레톤이므로 셰이더/VBO 없이 즉시 모드로 간단히
                     glPushMatrix();
-                    glRotatef(angleDeg, 0.577f, 0.577f, 0.577f); // 살짝 비틀어진 축
+                    //glRotatef(angleDeg, 0.577f, 0.577f, 0.577f); // 살짝 비틀어진 축
                     // 정점(삼각뿔 4개 면)
                     const GLfloat v0[3] = { 0.f,  1.f,  0.f };  // 꼭짓점
                     const GLfloat v1[3] = { -1.f, -1.f,  1.f };
@@ -247,6 +253,7 @@ namespace hv {
                     glEnd();
                     glPopMatrix();
 
+
                     // [G] Readback (동기, 상단-원점 보정은 소비자에서 처리 권장)
                     if (hasAttachments && !rgba.empty())
                     {
@@ -257,10 +264,6 @@ namespace hv {
 
                         // TODO: FrameReady 콜백 호출 지점
                          if (this->callback) {
-
-
-
-
                              frameView view{};
                              view.id     = nextID++;
                              view.width  = width;
@@ -274,24 +277,27 @@ namespace hv {
 
                     // 온디맨드 스켈레톤: 추가 더티가 없으면 잠깐 쉼
                     {
-                        std::unique_lock<std::mutex> lk(mtx);
+                        std::unique_lock<std::mutex> lock(mtx);
                         if (!sizeDirty && !clearDirty && !viewDirty && !dataDirty)
-                            condV.wait_for(lk, std::chrono::milliseconds(1));
+                            condV.wait_for(lock, std::chrono::milliseconds(1));
                     }
                 }
 
+
+                // Render Loop 탈출
                 // [종료] GL 자원 정리(컨텍스트 current인 같은 스레드에서)
                 if (hasAttachments) {
-                    glDeleteRenderbuffers(1, &depthstencil); depthstencil = 0;
-                    glDeleteTextures(1, &color);             color = 0;
+                    glDeleteRenderbuffers(1, &depthstencil);
+                    depthstencil = 0;
+                    glDeleteTextures(1, &color);             
+                    color = 0;
                     hasAttachments = false;
                 }
+
                 if (fbo) { 
                     glDeleteFramebuffers(1, &fbo); 
                     fbo = 0; 
                 }
-
-
 
                 {
                     // Thread safe 해제 직렬화.
@@ -328,12 +334,12 @@ hv::v1::render::render() : impl(std::make_unique<hv::v1::impl_render>()){
 
 #pragma region Destructor
 hv::v1::render::~render() {
-    this->dispose();
+    this->cleanUp();
 }
 #pragma endregion
 
 #pragma region Public Functions
-void hv::v1::render::dispose() {
+void hv::v1::render::cleanUp() {
     if (!impl) return;
 
     //lock

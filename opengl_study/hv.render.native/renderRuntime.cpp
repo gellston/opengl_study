@@ -1,7 +1,7 @@
 
 
-#include "render_runtime.h"
-#include "impl_render_runtime.h"
+#include "renderRuntime.h"
+#include "implRenderRuntime.h"
 
 #pragma region Static Variables
 
