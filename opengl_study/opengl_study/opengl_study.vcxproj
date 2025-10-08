@@ -136,6 +136,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="opengl_study.cpp" />
+    <ClCompile Include="render.cpp" />
+    <ClCompile Include="render_runtime.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="impl_render_runtime.h" />
+    <ClInclude Include="render.h" />
+    <ClInclude Include="render_export.h" />
+    <ClInclude Include="irender.h" />
+    <ClInclude Include="render_runtime.h" />
+    <ClInclude Include="render_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
