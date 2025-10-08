@@ -121,6 +121,22 @@ int main() {
         case 'c':
             std::cout << "exit" << std::endl;
             return 0;
+
+        case '1':
+            std::cout << "view size 1 " << std::endl;
+            render.resizeOutput({ 250, 250 });
+            render2.resizeOutput({ 250, 250 });
+            break;
+        case '2':
+            std::cout << "view size 1 " << std::endl;
+            render.resizeOutput({ 512, 512 });
+            render2.resizeOutput({ 512, 512 });
+            break;
+        case '3':
+            std::cout << "view size 1 " << std::endl;
+            render.resizeOutput({ 1280, 1024 });
+            render2.resizeOutput({ 1280, 1024 });
+            break;
         default:
             break;
         }
