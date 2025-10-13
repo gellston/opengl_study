@@ -31,16 +31,16 @@ namespace ConsoleTest
                         render.ZoomBy(0.9f);
                         break;
                     case ConsoleKey.DownArrow:
-                        render.TranslateBy(0, -1);
+                        render.TranslatePixelBy(0, -1);
                         break;
                     case ConsoleKey.UpArrow:
-                        render.TranslateBy(0, 1);
+                        render.TranslatePixelBy(0, 1);
                         break;
                     case ConsoleKey.LeftArrow:
-                        render.TranslateBy(-1, 0);
+                        render.TranslatePixelBy(-1, 0);
                         break;
                     case ConsoleKey.RightArrow:
-                        render.TranslateBy(1, 0);
+                        render.TranslatePixelBy(1, 0);
                         break;
                     case ConsoleKey.S:
                         render.OrbitBy(0, -3);

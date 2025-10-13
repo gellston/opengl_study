@@ -46,6 +46,8 @@ namespace hv {
 			virtual void setPan(float x, float y) = 0;
 			virtual void translateBy(float dx, float dy) = 0;
 
+			virtual void setPanPixel(float x_pixels, float y_pixels) = 0;
+			virtual void translatePixelBy(float dx_pixels, float dy_pixels) = 0;
 			
 
 			virtual void setOrbitAngle(float yawDeg, float pitchDeg) = 0;

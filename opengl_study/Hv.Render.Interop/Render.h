@@ -64,6 +64,9 @@ namespace Hv {
 			virtual void SetPan(float x, float y);
 			virtual void TranslateBy(float dx, float dy);
 
+			virtual void SetPanPixel(float pixel_x, float pixel_y);
+			virtual void TranslatePixelBy(float dx_pixels, float dy_pixels);
+
 			virtual void SetOrbitAngle(float yawDeg, float pitchDeg);
 			virtual void OrbitBy(float dyawDeg, float dpitchDeg);
 #pragma endregion

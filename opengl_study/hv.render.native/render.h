@@ -54,6 +54,9 @@ namespace hv {
 			RENDER_API void setPan(float x, float y) override;
 			RENDER_API void translateBy(float dx, float dy) override;
 
+			RENDER_API void setPanPixel(float x_pixels, float y_pixels) override;
+			RENDER_API void translatePixelBy(float dx_pixels, float dy_pixels) override;
+
 			RENDER_API void setOrbitAngle(float yawDeg, float pitchDeg) override;
 			RENDER_API void orbitBy(float dyawDeg, float dpitchDeg) override;
 

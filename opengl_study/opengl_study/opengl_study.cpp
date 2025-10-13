@@ -9,8 +9,8 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "render.h"
-#include "render_runtime.h"
+#include <render.h>
+#include <renderRuntime.h>
 
 
 
@@ -75,23 +75,23 @@ int main() {
             break;
         case 72:
             std::cout << "y +" << std::endl;
-            render.translateBy(0, -1);
-            render2.translateBy(0, 1);
+            render.translatePixelBy(0, -1);
+            render2.translatePixelBy(0, 1);
             break;
         case 80:
             std::cout << "y -" << std::endl;
-            render.translateBy(0, 1);
-            render2.translateBy(0, -1);
+            render.translatePixelBy(0, 1);
+            render2.translatePixelBy(0, -1);
             break;
         case 75:
             std::cout << "x -" << std::endl;
-            render.translateBy(-1, 0);
-            render2.translateBy(1, 0);
+            render.translatePixelBy(-1, 0);
+            render2.translatePixelBy(1, 0);
             break;
         case 77:
             std::cout << "x +" << std::endl;
-            render.translateBy(1, 0);
-            render2.translateBy(-1, 0);
+            render.translatePixelBy(1, 0);
+            render2.translatePixelBy(-1, 0);
             break;
 
         case 's':

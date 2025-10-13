@@ -205,6 +205,7 @@ void Hv::V1::Render::SetPan(float x, float y) {
 		throw gcnew System::Exception(msclr::interop::marshal_as<System::String^>(ex.what()));
 	}
 }
+
 void Hv::V1::Render::TranslateBy(float dx, float dy) {
 	try {
 
@@ -215,6 +216,28 @@ void Hv::V1::Render::TranslateBy(float dx, float dy) {
 		throw gcnew System::Exception(msclr::interop::marshal_as<System::String^>(ex.what()));
 	}
 }
+
+void Hv::V1::Render::SetPanPixel(float pixel_x, float pixel_y) {
+	try {
+
+		this->instance->setPanPixel(pixel_x, pixel_y);
+
+	}
+	catch (std::exception ex) {
+		throw gcnew System::Exception(msclr::interop::marshal_as<System::String^>(ex.what()));
+	}
+}
+void Hv::V1::Render::TranslatePixelBy(float dx_pixels, float dy_pixels) {
+	try {
+
+		this->instance->translatePixelBy(dx_pixels, dy_pixels);
+
+	}
+	catch (std::exception ex) {
+		throw gcnew System::Exception(msclr::interop::marshal_as<System::String^>(ex.what()));
+	}
+}
+
 
 void Hv::V1::Render::SetOrbitAngle(float yawDeg, float pitchDeg) {
 	try {

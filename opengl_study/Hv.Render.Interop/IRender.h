@@ -28,6 +28,8 @@ namespace Hv {
 			void ZoomBy(float zoom);
 			void SetZoom(float zoom);
 
+			void SetPanPixel(float pixel_x, float pixel_y);
+			void TranslatePixelBy(float dx_pixels, float dy_pixels);
 
 			void SetPan(float x, float y);
 			void TranslateBy(float dx, float dy);
