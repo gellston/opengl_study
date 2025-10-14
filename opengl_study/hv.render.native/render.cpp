@@ -31,7 +31,7 @@ namespace hv {
 			bool sizeDirty = true;
 			bool clearDirty = true;
 			bool viewDirty = true;
-			bool dataDirty = true;
+			bool dataDirty = false;
 
 			GLFWwindow* win = nullptr;
 			GLuint fbo = 0;
@@ -80,6 +80,8 @@ namespace hv {
                     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, hv::v1::global_glMajor);
                     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, hv::v1::global_glMinor);
                     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+                    glfwWindowHint(GLFW_SAMPLES, 4);
+                    glEnable(GL_MULTISAMPLE);
                     win = glfwCreateWindow(32, 32, "hidden", nullptr, nullptr);
                 }
 
@@ -187,7 +189,7 @@ namespace hv {
                         // FOV 고정 범위
                         /*if (fovY_deg < 30.0f) fovY_deg = 30.0f;
                         if (fovY_deg > 70.0f) fovY_deg = 70.0f;*/
-                        auto fovY_deg = 120.0f;
+                        auto fovY_deg = 70.0f;
 
                         // zoom → distance
                         const float z = (zoom < kMinZoom) ? kMinZoom : zoom; // zoom>1 == 확대
@@ -217,7 +219,6 @@ namespace hv {
                     }
 
 
-
                     // [E] 데이터 갱신(스켈레톤: 고정 지오메트리 → 아무것도 안 함)
                     if (dataDirty) {
                         // TODO: 여기에서 포인트클라우드/라인 등의 VBO 업로드/갱신을 수행
@@ -236,24 +237,36 @@ namespace hv {
 
                     glBegin(GL_TRIANGLES);
                     // 옆면1: v0-v1-v2
-                    glColor3f(1, 0, 0); glVertex3fv(v0);
-                    glColor3f(0, 1, 0); glVertex3fv(v1);
-                    glColor3f(0, 0, 1); glVertex3fv(v2);
+                    glColor3f(1, 0, 0); 
+                    glVertex3fv(v0);
+                    glColor3f(0, 1, 0); 
+                    glVertex3fv(v1);
+                    glColor3f(0, 0, 1); 
+                    glVertex3fv(v2);
 
                     // 옆면2: v0-v2-v3
-                    glColor3f(1, 0, 0); glVertex3fv(v0);
-                    glColor3f(0, 0, 1); glVertex3fv(v2);
-                    glColor3f(1, 1, 0); glVertex3fv(v3);
+                    glColor3f(1, 0, 0); 
+                    glVertex3fv(v0);
+                    glColor3f(0, 0, 1); 
+                    glVertex3fv(v2);
+                    glColor3f(1, 1, 0); 
+                    glVertex3fv(v3);
 
                     // 옆면3: v0-v3-v1
-                    glColor3f(1, 0, 0); glVertex3fv(v0);
-                    glColor3f(1, 1, 0); glVertex3fv(v3);
-                    glColor3f(0, 1, 0); glVertex3fv(v1);
+                    glColor3f(1, 0, 0); 
+                    glVertex3fv(v0);
+                    glColor3f(1, 1, 0); 
+                    glVertex3fv(v3);
+                    glColor3f(0, 1, 0); 
+                    glVertex3fv(v1);
 
                     // 바닥: v1-v3-v2
-                    glColor3f(0.3f, 0.3f, 0.3f); glVertex3fv(v1);
-                    glColor3f(0.3f, 0.3f, 0.3f); glVertex3fv(v3);
-                    glColor3f(0.3f, 0.3f, 0.3f); glVertex3fv(v2);
+                    glColor3f(0.3f, 0.3f, 0.3f); 
+                    glVertex3fv(v1);
+                    glColor3f(0.3f, 0.3f, 0.3f); 
+                    glVertex3fv(v3);
+                    glColor3f(0.3f, 0.3f, 0.3f); 
+                    glVertex3fv(v2);
                     glEnd();
                     //glPopMatrix();
 
@@ -317,11 +330,17 @@ namespace hv {
                         const float L = 0.8f;  // 축 길이
                         glBegin(GL_LINES);
                         // X (→)
-                        glColor3f(1, 0, 0); glVertex3f(0, 0, 0); glVertex3f(L, 0, 0);
+                        glColor3f(1, 0, 0); 
+                        glVertex3f(0, 0, 0); 
+                        glVertex3f(L, 0, 0);
                         // Y (↑)  ※ OpenGL 기준 +Y가 위입니다.
-                        glColor3f(0, 1, 0); glVertex3f(0, 0, 0); glVertex3f(0, L, 0);
+                        glColor3f(0, 1, 0); 
+                        glVertex3f(0, 0, 0); 
+                        glVertex3f(0, L, 0);
                         // Z (앞)
-                        glColor3f(0, 0, 1); glVertex3f(0, 0, 0); glVertex3f(0, 0, L);
+                        glColor3f(0, 0, 1); 
+                        glVertex3f(0, 0, 0); 
+                        glVertex3f(0, 0, L);
                         glEnd();
 
                         // 복원
@@ -331,7 +350,7 @@ namespace hv {
                         glMatrixMode(GL_MODELVIEW);
                         glPopAttrib();                 // 상태 복원
                         glViewport(prevViewport[0], prevViewport[1],
-                            prevViewport[2], prevViewport[3]);
+                                   prevViewport[2], prevViewport[3]);
                     }
 
 
@@ -558,7 +577,7 @@ void hv::v1::render::setPanPixel(float x_pixels, float y_pixels) {
 
         // 투영 파라미터 (viewDirty 분기 밖에서도 동일 값 사용)
         const float aspect = (impl->height > 0) ? float(impl->width) / float(impl->height) : 1.0f;
-        const float fovY = 120.0f * 3.1415926535f / 180.0f; // 현재 고정 FOV
+        const float fovY = 70.0f * 3.1415926535f / 180.0f; // 현재 고정 FOV
 
         // 픽셀 → 월드 스케일
         const float sx_per_px = 2.0f * distance * std::tan(fovY * 0.5f) * aspect / float(impl->width);
@@ -586,7 +605,7 @@ void hv::v1::render::translatePixelBy(float dx_pixels, float dy_pixels) {
 
         // 투영 파라미터 (viewDirty 분기 밖에서도 동일 값 사용)
         const float aspect = (impl->height > 0) ? float(impl->width) / float(impl->height) : 1.0f;
-        const float fovY = 120.0f * 3.1415926535f / 180.0f; // 현재 고정 FOV
+        const float fovY = 70.0 * 3.1415926535f / 180.0f; // 현재 고정 FOV
 
         // 픽셀 → 월드 스케일
         const float sx_per_px = 2.0f * distance * std::tan(fovY * 0.5f) * aspect / float(impl->width);

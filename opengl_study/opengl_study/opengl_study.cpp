@@ -137,6 +137,11 @@ int main() {
             render.resizeOutput({ 1280, 1024 });
             render2.resizeOutput({ 1280, 1024 });
             break;
+
+        case '4':
+            std::cout << "view size 1 " << std::endl;
+            render.invalidateData();
+            break;
         default:
             break;
         }
